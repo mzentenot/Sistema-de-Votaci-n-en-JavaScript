@@ -1,0 +1,78 @@
+class Question {
+    constructor(question, options, correctAnswer, userAnswer) {
+        this.question = question;
+        this.options = options;
+        this.correctAnswer = correctAnswer;
+        this.userAnswer = null;
+    }
+
+    isCorrectAnswer() {
+        return this.userAnswer === this.correctAnswer;
+    }
+    askUser() {
+        let optionsString = this.options.map((option, index) => `${index + 1}. ${option}`).join("\n");
+        let userResponse = prompt(`${this.question}\n${optionsString}\nEscribe el número de la opción correcta:`);
+        this.userAnswer = this.options[parseInt(userResponse) - 1];
+    }
+    resetAnswer() {
+        this.userAnswer = null;
+    }
+}
+
+//define como realizara las preguntas
+class Quiz {
+    constructor(questions) {
+        this.questions = questions;
+        this.correctAnswers = 0;
+        this.incorrectAnswers = 0;
+    }
+
+    askQuestions() {
+        this.questions.forEach((question) => {
+            console.log(question.question);
+            question.askUser();
+            if (question.isCorrectAnswer()) {
+                console.log("¡Correcto!");
+                this.correctAnswers++;
+            } else {
+                console.log(`Incorrecto. La respuesta correcta es ${question.correctAnswer}`);
+                this.incorrectAnswers++;
+            }
+        });
+        console.log("\nResumen del cuestionario:");
+        console.log(`Respuestas correctas: ${this.correctAnswers}`);
+        console.log(`Respuestas incorrectas: ${this.incorrectAnswers}`);
+    }
+    resetQuiz() {
+        this.correctAnswers = 0;
+        this.incorrectAnswers = 0;
+    }
+
+    starQuiz() {
+        do {
+            this.askQuestions();
+            var repeat = prompt("¿Desea repetir el cuestionario? (s/n)");
+            if (repeat === "n") {
+                this.resetQuiz();
+
+            }
+        } while (repeat === "s");
+        console.log("¡Gracias por participar en el cuestionario.!");
+
+    }
+}
+
+const questions = [
+    new Question("¿Cuál es la capital de Francia?", ["París", "Londres", "Roma"], "París"),
+    new Question("¿Cuál es la capital de Inglaterra?", ["Madrid", "Londres", "Berlín"], "Londres"),
+    new Question("¿Cuál es la capital de España?", ["Madrid", "Barcelona", "Sevilla"], "Madrid"),
+    new Question("¿Cuál es la capital de Italia?", ["Milán", "Roma", "Nápoles"], "Roma"),
+    new Question("¿Cuál es la capital de Alemania?", ["Hamburgo", "Berlín", "Múnich"], "Berlín"),
+    new Question("¿Cuál es la capital de Rusia?", ["Moscú", "San Petersburgo", "Sochi"], "Moscú"),
+    new Question("¿Cuál es la capital de Japón?", ["Osaka", "Tokio", "Yokohama"], "Tokio"),
+    new Question("¿Cuál es la capital de Australia?", ["Sydney", "Melbourne", "Canberra"], "Canberra"),
+    new Question("¿Cuál es la capital de Madagascarc?", ["Toamasina", "Fianarantsoa", "Antananarivo", "Mahajanga"], "Antananarivo"),
+];
+
+const quiz = new Quiz(questions);
+quiz.starQuiz();
